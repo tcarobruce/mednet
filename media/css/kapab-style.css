@@ -2,13 +2,13 @@
 body{background:#222}
 a img{border:0}
 #container{margin:0 5%;background:#FFF;min-width:950px}
-#header{position:relative;height:70px;border-bottom:5px solid #444}
+#header{position:relative;height:110px;border-bottom:5px solid #444}
 #header img{width:70px}
-#menu{margin:0 0 0 120px;position:absolute;top:30px;right:15px}
+#menu{margin:0 0 0 35px;float:left}
 #menu li{list-style:none;float:left;line-height:1.0em;margin-right:1px}
-#menu li a{background:url('/media/img/haiti-tabs.png');height:40px;line-height:40px;width:170px;display:block;text-align:center;text-decoration:none;color:#FFF;font-weight:900}
+#menu li a{background:url('/media/img/haiti-tabs-short.png');height:30px;line-height:30px;width:150px; display:block;text-align:center;text-decoration:none;color:#FFF;font-weight:900}
 #menu li a.selected,#menu li a:hover{background-position:bottom}
-#content{padding:30px}
+#content{padding:30px; padding-top:0px}
 a{color:#C00}
 a:hover{color:#F00}
 h1{font-size:1.4em;line-height:2.2em;background:#222;color:#FFF;text-indent:20px;margin:0 -15px}
