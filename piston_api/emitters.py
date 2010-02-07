@@ -1,8 +1,10 @@
 from __future__ import generators
 
 import types, decimal, types, re, inspect
+import csv
+from cStringIO import StringIO
 
-from piston.emitters import JSONEmitter
+from piston.emitters import JSONEmitter, Emitter
 from django.core.serializers.json import DjangoJSONEncoder
 from django.contrib.gis.geos import fromstr
 import simplejson
@@ -221,3 +223,35 @@ class GeoJSONEmitter(JSONEmitter):
             
         # Kickstart the seralizin'.
         return _any(self.data, self.fields)
+
+class CSVEmitter(Emitter):
+	def skip_field(self, fieldname):
+		return False
+		if fieldname.startswith('_'):
+			return True
+		return False
+
+	def encode_values(self, d):
+		result = {}
+		for k, v in d.iteritems():
+			if self.skip_field(k): continue
+			if isinstance(v, str) or isinstance(v, unicode):
+				v = v.encode('utf-8')
+			result[k] = v
+		return result
+		
+	def render(self, request):
+		result = StringIO()
+		data = self.construct()
+		if not data:
+			return ''  # is this the right way to specify and empty csv doc?
+		if isinstance(data, dict):
+			data = [data]		
+		# might replace this with a more sensible ordering (from handler fields?):				
+		fieldnames = sorted([f for f in data[0].keys() if not self.skip_field(f)])
+		result.write(','.join(fieldnames) + "\n")
+		writer = csv.DictWriter(result, fieldnames)		
+		writer.writerows((self.encode_values(d) for d in data))
+		
+		return result.getvalue()
+		

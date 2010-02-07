@@ -1,10 +1,11 @@
 from piston.handler import BaseHandler, AnonymousBaseHandler
 from piston.emitters import Emitter, JSONEmitter
-from piston_api.emitters import GeoJSONEmitter
+from piston_api.emitters import GeoJSONEmitter, CSVEmitter
 from mednet.sahana.models import *
-
+ 
 JSONEmitter.unregister('json')
 Emitter.register('json', GeoJSONEmitter, 'application/javascript; charset=utf-8')
+Emitter.register('csv', CSVEmitter, 'text/plain; charset=utf-8')  # change to text/csv when done testing
 
 #Hospitals
 class AnonymousHospitalHandler(BaseHandler):
