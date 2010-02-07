@@ -34,6 +34,10 @@ class HmsServiceAdmin(admin.OSMGeoAdmin):
     list_display = ('pk', 'hospital', 'burn','card','dial','emsd')
     list_filter = ('burn', 'card', 'dial', 'emsd', 'infd', 'neon', 'neur','pedi','surg','labs','tran','tair','trac','psya','psyp','obgy')
 
+class HmsRequestMedicalSupply(admin.OSMGeoAdmin):
+    list_display = ('pk', 'supply', 'unit', 'quanity', 'supply_id')
+    search_fields = ('supply', 'supply_id')
+
 admin.site.register(PrPerson)
 admin.site.register(OrOrganisation)
 admin.site.register(HmsHospital, HmsHospitalAdmin)
