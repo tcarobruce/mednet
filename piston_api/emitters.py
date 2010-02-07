@@ -262,10 +262,12 @@ class KMLEmitter(GeoEmitter):
 
     def render(self, request):
         data = self.construct()
+        title = self.handler.model._meta.verbose_name_plural
         if isinstance(data, dict):
             data = [data]
+            title = self.handler.model._meta.verbose_name
         context = {
-            'document_title': self.handler.model.__name__,
+            'document_title': title,
             'places': data,
         }
         print data[0]['location'], type(data[0]['location'])
