@@ -36,3 +36,8 @@ class PersonForm(ModelForm):
         model = PrPerson 
 	exclude = ('created_on','created_by', 'modified_by', 'modified_on', 'uuid', 'deleted',)
 
+class MedicalSupplyForm(ModelForm):
+    class Meta:
+        model = HmsRequestMedicalSupply
+    exclude = ('created_on', 'created_by', 'modified_by', 'modified_on', 'uuid', 'deleted',)
+

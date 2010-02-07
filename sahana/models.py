@@ -358,16 +358,18 @@ ITEM_TYPE_CHOICES = (
   (3, 'BOT'),
   (4, 'TAB')
 )
-class HmsRequestItem(models.Model):
+class HmsRequestMedicalSupply(models.Model):
     created_on = models.DateTimeField(null=True, blank=True)
     modified_on = models.DateTimeField(null=True, blank=True)
     uuid = models.CharField(unique=True, max_length=64, null=True, blank=True)
+    created_by = models.ForeignKey(User, null=True, blank=True, related_name='hmsrequestmedicalsupply_created_by')
+    modified_by = models.ForeignKey(User, null=True, blank=True, related_name='hmsrequestmedicalsupply_modified_by')
     deleted = models.CharField(max_length=1, blank=True)
     request = models.ForeignKey(HmsRequest, null=True, blank=True)
-    item = models.CharField(max_length=512, blank=True, null=True)
+    supply = models.CharField(max_length=512, blank=True, null=True)
     unit = models.CharField(max_length=128, blank=True, null=True, choices=ITEM_TYPE_CHOICES)
     quanity = models.IntegerField(null=True, blank=True)
-    item_id = models.CharField(max_length=512, blank=True, null=True)
+    supply_id = models.CharField(max_length=512, blank=True, null=True)
     item_category = models.CharField(max_length=512, blank=True, null=True)
     class Meta:
       verbose_name = "Medical Supply"
