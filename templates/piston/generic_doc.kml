@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+<Document>
+  <name>{{document_title}}</name>
+  {% if document_description %}
+  <description>{{document_description}}</description>
+  {% endif %}
+{% for place in places %}
+  <Placemark>
+    <name>{{ place.name|escape }}</name>
+    {% if place.description %}
+    <description>
+    {{ place.description|escape }}
+    </description>{% endif %}
+    {% if place.location %}
+    {{ place.location|safe }}{% endif %}
+    {% if place.date_time %}
+    <TimeStamp>
+      <when>{{ place.date_time|date:"Y-m-d\TH:i:s\Z" }}</when>
+    </TimeStamp>{% endif %}
+    <ExtendedData>
+    {% for k,v in place.items %}
+      <Data name="{{k}}"><value>{% if v %}{{v}}{% endif %}</value></Data>{% endfor %}
+    </ExtendedData>    
+  </Placemark>
+{% endfor %}
+</Document>
+</kml>

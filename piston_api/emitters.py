@@ -17,12 +17,12 @@ from django.core.serializers.json import DateTimeAwareJSONEncoder
 from django.http import HttpResponse
 from django.core import serializers
 from django.contrib.gis.geos.geometry import GEOSGeometry
+from django.shortcuts import render_to_response
 
-class GeoJSONEmitter(JSONEmitter):
-    """
-    GeoJSON emitter, understands timestamps and GIS objects
-    """
-    
+class GeoEmitter(Emitter):
+    def serialize_geometry(self, geometry):
+        return geometry.wkt
+
     def construct(self):
         """
         Recursively serialize a lot of types, and
@@ -54,7 +54,7 @@ class GeoJSONEmitter(JSONEmitter):
                 if not inspect.getargspec(thing)[0]:
                     ret = _any(thing())
             elif isinstance(thing, GEOSGeometry):
-                ret = thing.geojson
+                ret = self.serialize_geometry(thing)
             else:
                 ret = smart_unicode(thing, strings_only=True)
 
@@ -224,34 +224,50 @@ class GeoJSONEmitter(JSONEmitter):
         # Kickstart the seralizin'.
         return _any(self.data, self.fields)
 
-class CSVEmitter(Emitter):
-	def skip_field(self, fieldname):
-		return False
-		if fieldname.startswith('_'):
-			return True
-		return False
+class GeoJSONEmitter(JSONEmitter, GeoEmitter):
+    """
+    GeoJSON emitter, understands timestamps and GIS objects
+    """
+    def serialize_geometry(self, geometry):
+        return geometry.geojson
+	
 
-	def encode_values(self, d):
-		result = {}
-		for k, v in d.iteritems():
-			if self.skip_field(k): continue
-			if isinstance(v, str) or isinstance(v, unicode):
-				v = v.encode('utf-8')
-			result[k] = v
-		return result
-		
-	def render(self, request):
-		result = StringIO()
-		data = self.construct()
-		if not data:
-			return ''  # is this the right way to specify and empty csv doc?
-		if isinstance(data, dict):
-			data = [data]		
-		# might replace this with a more sensible ordering (from handler fields?):				
-		fieldnames = sorted([f for f in data[0].keys() if not self.skip_field(f)])
-		result.write(','.join(fieldnames) + "\n")
-		writer = csv.DictWriter(result, fieldnames)		
-		writer.writerows((self.encode_values(d) for d in data))
-		
-		return result.getvalue()
+class CSVEmitter(Emitter):
+    def encode_values(self, d):
+        result = {}
+        for k, v in d.iteritems():
+            if isinstance(v, str) or isinstance(v, unicode):
+                v = v.encode('utf-8')
+            result[k] = v
+        return result
+        
+    def render(self, request):
+        result = StringIO()
+        data = self.construct()
+        if not data:
+            return ''  # is this the right way to specify and empty csv doc?
+        if isinstance(data, dict):
+            data = [data]       
+        # might replace this with a more sensible ordering (from handler fields?):              
+        fieldnames = sorted(data[0].keys())
+        result.write(','.join(fieldnames) + "\n")
+        writer = csv.DictWriter(result, fieldnames)     
+        writer.writerows((self.encode_values(d) for d in data))
+        
+        return result.getvalue()
+
+class KMLEmitter(GeoEmitter):
+    def serialize_geometry(self, geometry):
+        return geometry.kml
+
+    def render(self, request):
+        data = self.construct()
+        if isinstance(data, dict):
+            data = [data]
+        context = {
+            'document_title': self.handler.model.__name__,
+            'places': data,
+        }
+        print data[0]['location'], type(data[0]['location'])
+        return render_to_response('piston/generic_doc.kml', context)
 		
