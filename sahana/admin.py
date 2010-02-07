@@ -34,7 +34,7 @@ class HmsServiceAdmin(admin.OSMGeoAdmin):
     list_display = ('pk', 'hospital', 'burn','card','dial','emsd')
     list_filter = ('burn', 'card', 'dial', 'emsd', 'infd', 'neon', 'neur','pedi','surg','labs','tran','tair','trac','psya','psyp','obgy')
 
-class HmsRequestMedicalSupply(admin.OSMGeoAdmin):
+class HmsRequestMedicalSupplyAdmin(admin.OSMGeoAdmin):
     list_display = ('pk', 'supply', 'unit', 'quanity', 'supply_id')
     search_fields = ('supply', 'supply_id')
 
@@ -48,6 +48,7 @@ admin.site.register(HmsImage, HmsImageAdmin)
 admin.site.register(HmsResource, HmsResourceAdmin)
 admin.site.register(HmsService, HmsServiceAdmin)
 admin.site.register(HmsRequest, HmsRequestAdmin)
+admin.site.register(HmsRequestMedicalSupply, HmsRequestMedicalSupplyAdmin)
 admin.site.register(OrOffice)
 admin.site.register(OrActivity)
 admin.site.register(OrContact)
@@ -58,3 +59,4 @@ admin.site.register(RmsReq)
 admin.site.register(RmsPledge)
 admin.site.register(RmsSmsRequest)
 admin.site.register(RmsTweetRequest)
+
