@@ -1,11 +1,13 @@
 function makeGradientSlider(element, formField){
 	formField.val(5);
 	element.addClass('slider');
+	/*
 	element.gradient({
 		from:      '00FF00',
 		to:        'FF0000',
 		direction: 'vertical'
 	});
+	*/
 	element.slider({
 		min:0, 
 		max:10, 

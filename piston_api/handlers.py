@@ -229,3 +229,19 @@ class HospitalServiceHandler(BaseHandler):
 	allow_methods = ('GET',)
 	model = HmsService
 	anonymous = AnonymousHospitalServiceHandler
+
+#Hospital Status 
+class AnonymousHospitalStatusHandler(BaseHandler):
+   allowed_methods = ('GET',)
+   model = HmsStatus
+
+   def read(self, request, hospital_id=None):
+	if(hospital_id):
+		return HmsStatus.objects.filter(hospital=HmsHospital.objects.get(pk=hospital_id))
+	else:
+		return HmsStatus.objects.all()
+
+class HospitalStatusHandler(BaseHandler):
+	allow_methods = ('GET',)
+	model = HmsStatus
+	anonymous = AnonymousHospitalStatusHandler

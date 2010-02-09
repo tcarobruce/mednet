@@ -1,9 +1,7 @@
 {% extends "site_base.html" %}
-{% block extra_head %}
-<script type="text/javascript" src="/media/js/hospital-status.js"></script>
-{% endblock %}
 {% block body %}
 <center>
+<h2>Hospital Status Form</h2>
 <form id='hospitalstatusform' onsubmit="return submitStatusForm()">
 <input type='hidden' name='hospital' value={{ hospital_id }}>
 <table>

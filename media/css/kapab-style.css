@@ -44,3 +44,5 @@ th {text-align:left;}
 td {padding:2px;border:none;}
 .status-td {padding:2px;border:none; width:200px; height:12px;}
 .error {color: #D8000C;background-color: #FFBABA;background-image: url('error.png');}
+#ui-datepicker-div{z-index: 9999999;}
+

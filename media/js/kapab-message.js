@@ -1,13 +1,41 @@
 	$(document).ready(function() {
 		
 		$('#plus_link').click(function() {
-			url = "/mednet/sahana/add_person/?hospital_id=" + $('.hospital-select').val();
-			populateForm(url);
+			url = "/mednet/sahana/add_person/?hospital_id=" + $('#hospital_id').val();
+			populateForm(url, false);
 			return false
 		});
+		$('#hospitalactionform button.activities').click(function() {
+			populateForm("/mednet/sahana/add_activities/?hospital_id=" + $('#hospital_id').val(), false, '#id_date');
+			return false;
+		});
+		$('#hospitalactionform button.capacity').click(function() {
+			$('#hospitaldataform').text('');
+			populateForm("/mednet/sahana/add_hbc/?hospital_id=" + $('#hospital_id').val(), false, '#id_date');
+			return false
+		});
+		$('#hospitalactionform button.contacts').click(function() {
+			$('#hospitaldataform').text('');
+			populateForm("/mednet/sahana/add_contact/?hospital_id=" + $('#hospital_id').val(), false);
+			return false;
+		});
+		$('#hospitalactionform button.requests').click(function() {
+			$('#hospitaldataform').text('');
+			populateForm("/mednet/sahana/add_request/?hospital_id=" + $('#hospital_id').val(), false);
+			return false;
+		});
+		$('#hospitalactionform button.resources').click(function() {
+			$('#hospitaldataform').text('');
+			populateForm("/mednet/sahana/add_resources/?hospital_id=" + $('#hospital_id').val(), false);
+			return false;
+		});
+		$('#hospitalactionform button.services').click(function() {
+			$('#hospitaldataform').text('');
+			populateForm("/mednet/sahana/add_services/?hospital_id=" + $('#hospital_id').val(), false);
+			return false;
+		});
 		$('#hospitalactionform button.status').click(function() {
-			populateForm('/mednet/sahana/add_status/?hospital_id=' + $('#hospital_id').val()); 
-			hospitalStatusSliders();
+			populateForm('/mednet/sahana/add_status/?hospital_id=' + $('#hospital_id').val(), true, '#id_status_date'); 
 			return false;
 		});
 		$('#messageactionform button.custom').click(function() {
@@ -45,32 +73,37 @@
 		});
 		$('#messageform button.capacity').click(function() {
 			$('#hospitaldataform').text('');
-			populateForm("/mednet/sahana/add_hbc/?hospital_id=" + $('.hospital-select').val());
+			populateForm("/mednet/sahana/add_hbc/?hospital_id=" + $('#hospital_id').val(), false, '#id_date');
 			return false
 		});
 		$('#messageform button.contacts').click(function() {
 			$('#hospitaldataform').text('');
-			populateForm("/mednet/sahana/add_contact/?hospital_id=" + $('.hospital-select').val());
+			populateForm("/mednet/sahana/add_contact/?hospital_id=" + $('#hospital_id').val(), false);
 			return false;
 		});
 		$('#messageform button.resources').click(function() {
 			$('#hospitaldataform').text('');
-			populateForm("/mednet/sahana/add_resources/?hospital_id=" + $('.hospital-select').val());
+			populateForm("/mednet/sahana/add_resources/?hospital_id=" + $('#hospital_id').val(), false);
 			return false;
 		});
 		$('#messageform button.services').click(function() {
 			$('#hospitaldataform').text('');
-			populateForm("/mednet/sahana/add_services/?hospital_id=" + $('.hospital-select').val());
+			populateForm("/mednet/sahana/add_services/?hospital_id=" + $('#hospital_id').val(), false);
 			return false;
 		});
 		$('#messageform button.requests').click(function() {
 			$('#hospitaldataform').text('');
-			populateForm("/mednet/sahana/add_request/?hospital_id=" + $('.hospital-select').val());
+			populateForm("/mednet/sahana/add_request/?hospital_id=" + $('#hospital_id').val(), false);
 			return false;
 		});
 		$('#messageform button.activities').click(function() {
 			$('#hospitaldataform').text('');
-			populateForm("/mednet/sahana/add_activities/?hospital_id=" + $('.hospital-select').val());
+			populateForm("/mednet/sahana/add_activities/?hospital_id=" + $('#hospital_id').val(), false, '#id_date');
+			return false;
+		});
+		$('#messageform button.status').click(function() {
+			populateForm('/mednet/sahana/add_status/?hospital_id=' + $('#hospital_id').val(), true, '#id_status_date'); 
+			hospitalStatusSliders();
 			return false;
 		});
 	});
@@ -233,7 +266,7 @@
 			return false;	
 		}
 	
-		function populateForm(url){
+		function populateForm(url, status_form, date_picker_element){
 			$('#hospitaldataform').text('');
 			$.ajax({
 				url: url,
@@ -241,7 +274,12 @@
 				success: function(html){
 					$('#hospitaldataform').hide()
 					$("#hospitaldataform").html(html);
-					hospitalStatusSliders();
+					if(status_form) {
+						hospitalStatusSliders();
+					}
+					if(date_picker_element) {
+						$(date_picker_element).datepicker({dateFormat: 'yy-mm-dd'});				
+					}
 					$('#hospitaldataform').show()
 				}
 			});
