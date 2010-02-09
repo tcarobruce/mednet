@@ -96,7 +96,7 @@ def next_message(request, message_type):
 		except:
 			#No Messages Matching Criteria
 			print sys.exc_info()		
-			return render_to_response('messaging/no_messages.html', {'type': 'Voice'}, context_instance=RequestContext(request))
+			return render_to_response('messaging/no_messages.html', {'type': 'Mail'}, context_instance=RequestContext(request))
 	elif(message_type == 'sms'):
 		try:
 			next_sms_message = IncomingSmsMessage.objects.filter(status='NW').order_by('-date_sent')[0:1].get()
@@ -107,7 +107,7 @@ def next_message(request, message_type):
 			return render_to_response('messaging/next_sms_message.html', {'next_sms_message': next_sms_message, 'hospitals': hospitals}, context_instance=RequestContext(request))
 		except:
 			#No Messages Matching Criteria
-			return render_to_response('messaging/no_messages.html', {'type': message_type}, context_instance=RequestContext(request))
+			return render_to_response('messaging/no_messages.html', {'type': 'SMS'}, context_instance=RequestContext(request))
 	else:
 		#message type not valid
 		pass
