@@ -1,5 +1,13 @@
 {% extends "site_base.html" %}
 {% block title %}SMS{% endblock %}
+{% block extra_head %}
+<script type='text/javascript' src="/media/js/jquery-limit.js"></script>
+<script type='text/javascript'>
+$(document).ready(function() {
+	$('#custom_message').limit('160', '#charsLeft');
+});
+</script>
+{% endblock %}
 {% block leftcontainer %}
 <h2>SMS Message</h2>
 <table border=1>
@@ -14,6 +22,11 @@
 <input id='msg_id' type='hidden' name='msg_id' value='{{ next_sms_message.pk }}'>
 <button type='submit' value='Complete' class='complete'>Complete</button>
 <button type='submit' value='Ignore' class='ignore'>Ignore</button>
+<button type='submit' value='Custom Message' class='custom'>Custom Message</button>
+<div id='custom_message_area'>
+<textarea name='custom_message' class='custom_message' id='custom_message'></textarea><br/>
+<span id="charsLeft"></span> chars left.
+</div>
 </form>
 <h2>Select the Hospital That this message is for</h2>
 <form id='messageform'>

@@ -1,18 +1,29 @@
 	$(document).ready(function() {
-		$('#id_date').live('click', function() {
-			$(this).datepicker();	
-		});
-
+		
 		$('#plus_link').click(function() {
 			url = "/mednet/sahana/add_person/?hospital_id=" + $('.hospital-select').val();
 			populateForm(url);
 			return false
 		});
+		$('#hospitalactionform button.status').click(function() {
+			populateForm('/mednet/sahana/add_status/?hospital_id=' + $('#hospital_id').val()); 
+			hospitalStatusSliders();
+			return false;
+		});
+		$('#messageactionform button.custom').click(function() {
+			if($('#custom_message_area').css('display') == 'none') {
+				$('#custom_message_area').slideDown();
+			} else {
+				$('#custom_message_area').slideUp()
+			}
+			return false
+		});
+
 		$('#messageactionform button.complete').click(function() {
 			$('#hospitaldataform').text('');
 			msgtype = $('#messagetype').val();
 			msgid = $('#msg_id').val();
-				$.ajax({ url: "/mednet/messaging/mark_message/?status=CM&msgtype=" + msgtype + "&msgid=" + msgid, context: document.body, success: function(){
+				$.ajax({ url: "/mednet/messaging/mark_message/?status=CM&msgtype=" + msgtype + "&msgid=" + msgid + "&custom_msg=" + escape($("#custom_message").val()), context: document.body, success: function(){
 				$('#hospitaldataform').hide()
 				$('#hospitaldataform').html('<h2>Message Complete ... Loading Next Message</h2>');
 				$('#hospitaldataform').fadeIn('slow', function() {});
@@ -24,7 +35,7 @@
 			$('#hospitaldataform').text('');
 			msgtype = $('#messagetype').val();
 			msgid = $('#msg_id').val();
-				$.ajax({ url: "/mednet/messaging/mark_message/?status=CM&msgtype=" + msgtype + "&msgid=" + msgid, context: document.body, success: function(){
+				$.ajax({ url: "/mednet/messaging/mark_message/?status=IG&msgtype=" + msgtype + "&msgid=" + msgid, context: document.body, success: function(){
 				$('#hospitaldataform').hide()
 				$('#hospitaldataform').html('<h2>Message Ignored ... Loading Next Message</h2>');
 				$('#hospitaldataform').fadeIn('slow', function() {});
@@ -199,6 +210,28 @@
 			});
 			return false;
 		}
+
+		function submitStatusForm() {
+			formData = $('#hospitalstatusform').serialize();
+			validForm = true;
+			if(!validForm) { return false;}	
+			$.ajax({
+				type: "POST",
+				url: "/mednet/sahana/add_status/",
+				data: formData,
+				success: function() {
+					$('#hospitaldataform').text('');
+					$('#hospitaldataform').html("<h2>Status Report Submitted</h2>")  
+					.append("<center><p>Thank You</p></center>")  
+					.hide()  
+					.fadeIn(1500, function() {  
+						//$('#hospitaldataform').append("<img id='checkmark' src='images/check.png'/>");  
+					});
+					$('#hospitaldataform').text('');
+				}
+			});
+			return false;	
+		}
 	
 		function populateForm(url){
 			$('#hospitaldataform').text('');
@@ -206,7 +239,10 @@
 				url: url,
 				cache: false,
 				success: function(html){
+					$('#hospitaldataform').hide()
 					$("#hospitaldataform").html(html);
+					hospitalStatusSliders();
+					$('#hospitaldataform').show()
 				}
 			});
 		}

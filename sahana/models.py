@@ -161,6 +161,27 @@ class HmsHospital(models.Model):
     class Meta:
 	verbose_name = "Hospital"
 	
+class HmsStatus(models.Model):
+    created_on = models.DateTimeField(null=True, blank=True)
+    modified_on = models.DateTimeField(null=True, blank=True)
+    uuid = models.CharField(unique=True, max_length=64, null=True, blank=True)
+    created_by = models.ForeignKey(User, null=True, blank=True, related_name='hmsstatus_created_by')
+    modified_by = models.ForeignKey(User, null=True, blank=True, related_name='hmsstatus_modified_by')
+    deleted = models.CharField(max_length=3, blank=True)
+    hospital = models.ForeignKey(HmsHospital, null=True, blank=True)
+    status_date = models.DateField()
+    security_status = models.PositiveIntegerField(null=True, blank=True)
+    backlog_status = models.PositiveIntegerField(null=True, blank=True)
+    critical_backlog_status = models.PositiveIntegerField(null=True, blank=True)
+    non_critical_backlog_status = models.PositiveIntegerField(null=True, blank=True)
+    disease_critical_backlog_status = models.PositiveIntegerField(null=True, blank=True)
+    disease_critical_backlog_status = models.PositiveIntegerField(null=True, blank=True)
+    supply_status = models.PositiveIntegerField(null=True, blank=True)
+    supply_delivery_status = models.PositiveIntegerField(null=True, blank=True)
+    communication_status = models.PositiveIntegerField(null=True, blank=True)
+    class Meta:
+	verbose_name = "Hospital Status Report"
+	verbose_name_plural = "Hospital Status Reports"
 
 BED_TYPE_CHOICES = (
 	(1, "Adult ICU"),

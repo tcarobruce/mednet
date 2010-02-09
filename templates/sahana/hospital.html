@@ -5,14 +5,19 @@
 <center><h2>{{ hospital.name }}</h2></center>
 
 <center>
+<form id='hospitalactionform'>
+<input type='hidden' name='hospital_id' id='hospital_id' value='{{ hospital.id }}'>
 <button type='submit' value='Activities' class='activities'>Activities</button>
 <button type='submit' value='Bed Capacity' class='capacity'>Bed Capacity</button>
 <button type='submit' value='Contacts' class='contacts'>Contacts</button>
 <button type='submit' value='Requests' class='requests'>Requests</button>
 <button type='submit' value='Resources' class='resources'>Resources</button>
 <button type='submit' value='Services' class='services'>Services</button>
+<button type='submit' value='Status' class='status'>Status</button>
 </center>
-
+</form>
+<div id='hospitaldataform'>
+</div>
 <br/>
 {% if user.is_staff %}
 	<a href='/mednet/admin/sahana/hmshospital/{{ hospital.id }}/?next=/mednet/hospital/{{ hospital.id }}'>Edit</a>&nbsp;&nbsp;

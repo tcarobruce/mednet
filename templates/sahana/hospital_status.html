@@ -1,0 +1,17 @@
+{% extends "site_base.html" %}
+{% block extra_head %}
+<script type="text/javascript" src="/media/js/hospital-status.js"></script>
+{% endblock %}
+{% block body %}
+<center>
+<form id='hospitalstatusform' onsubmit="return submitStatusForm()">
+<input type='hidden' name='hospital' value={{ hospital_id }}>
+<table>
+{% for field in form %}
+<tr><td>{{ field.label_tag }}</td><td class='status-td'>{{field}}<span id='div-{{ field.label|slugify }}'></span></td></tr>
+{% endfor %}
+</table>
+<button type='submit' value='Submit Status Report' class='request'>Submit Status Report</button>
+</form>
+<center>
+{% endblock %}

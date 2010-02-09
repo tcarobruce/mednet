@@ -3,15 +3,15 @@
 <head>
 <title>Kapab MedNet - {% block title %}{% endblock %}</title>
 <script type='text/javascript' src="/media/js/jquery.js"></script>
-<link type="text/css" href="http://jqueryui.com/latest/themes/base/ui.all.css" rel="stylesheet" />
-<script type="text/javascript" src="http://jqueryui.com/latest/ui/ui.core.js"></script>
-<script type="text/javascript" src="http://jqueryui.com/latest/ui/ui.datepicker.js"></script>
+<link type="text/css" href="/media/css/jquery-ui-1.7.2.custom.css" rel="stylesheet" />
+<script type="text/javascript" src="/media/js/jquery.dimensions.js"></script>
+<script type="text/javascript" src="/media/js/jquery.gradient.js"></script>
+<script type="text/javascript" src="/media/js/jquery-ui.js"></script>
 <link rel="stylesheet" media="all" href="/media/css/kapab-style.css" />
 {% block extra_head %}{% endblock %}
 </head>
 <body>
-
-
+{% block body %}
 <div id="container">
     <div id="header">
 		<div id='authentication'>
@@ -56,5 +56,7 @@
 	</div>
 </div>
 <script type='text/javascript' src="/media/js/kapab-message.js"></script>
+<script type="text/javascript" src="/media/js/hospital-status.js"></script>
+{% endblock %}
 </body>
 </html>

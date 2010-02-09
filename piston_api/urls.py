@@ -5,6 +5,8 @@ from piston.authentication import OAuthAuthentication
 
 auth = OAuthAuthentication()
 
+incomingsms_handler = Resource(IncomingSmsHandler, authentication=auth)
+outgoingsms_handler = Resource(OutgoingSmsHandler, authentication=auth)
 hospital_handler = Resource(HospitalHandler, authentication=auth)
 hospital_activity_handler = Resource(HospitalActivityHandler, authentication=auth)
 hospital_bed_capacity_handler = Resource(HospitalBedCapacityHandler, authentication=auth)
@@ -15,6 +17,12 @@ hospital_resource_handler = Resource(HospitalResourceHandler, authentication=aut
 hospital_service_handler = Resource(HospitalServiceHandler, authentication=auth)
 
 urlpatterns = patterns('',
+	url(r'^insms/(?P<message_id>\d+)/$', incomingsms_handler),
+	url(r'^insms/$', incomingsms_handler),
+	
+	url(r'^outsms/(?P<message_date>[0-9]*\.?[0-9]*)/$', outgoingsms_handler),
+	url(r'^outsms/$', outgoingsms_handler),
+
 	url(r'^hospital/(?P<hospital_id>\d+)/$', hospital_handler),
 	url(r'^hospital/$', hospital_handler),
 

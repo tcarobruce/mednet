@@ -135,6 +135,27 @@ def hospital_activities_form(request):
 
 	return render_to_response('sahana/hospital_activities.html', {'hospital_id': hospital_id, 'form': form, 'request': request}, context_instance=RequestContext(request))
 
+def hospital_status_form(request):
+	try:
+		hospital_id = request.GET['hospital_id']
+	except:
+		hospital_id = None
+	print hospital_id
+	status = HmsStatus()
+	if request.POST:
+		form = HospitalStatusForm(data=request.POST, instance=status)
+		if form.is_valid():
+			form.save()
+			status.hospital = HmsHospital.objects.get(pk=request.POST['hospital'])
+			status.save()
+			return HttpResponse('ok')
+		else:
+			return HttpResponse('errors')
+	else:
+		form = HospitalStatusForm(instance=status)
+
+	return render_to_response('sahana/hospital_status.html', {'hospital_id': hospital_id, 'form': form, 'request': request}, context_instance=RequestContext(request))
+
 def person_form(request):
 	person =  PrPerson()
 	if request.POST:

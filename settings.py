@@ -4,6 +4,8 @@ import os
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
+PISTON_EMAIL_ERRORS="travis.pinney@gmail.com"
+
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 

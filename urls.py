@@ -10,7 +10,8 @@ from django.contrib import admin
 admin.autodiscover()
 
 databrowse.site.register(VoiceMessage)
-databrowse.site.register(SmsMessage)
+databrowse.site.register(IncomingSmsMessage)
+databrowse.site.register(OutgoingSmsMessage)
 databrowse.site.register(MailMessage)
 
 databrowse.site.register(Category)
@@ -26,6 +27,7 @@ urlpatterns = patterns('',
     (r'^mednet/hospitals/$', 'mednet.views.hospitals'),
     (r'^mednet/hospital/(?P<hospital_id>\d+)/$', 'mednet.views.hospital'),
     (r'^mednet/about/$', 'mednet.views.about'),
+    (r'^mednet/test_gradient/$', 'mednet.views.gradient'),
     (r'^mednet/accounts/login/$', 'django.contrib.auth.views.login'),
     (r'^mednet/accounts/logout/$', 'django.contrib.auth.views.logout', {'next_page': '/mednet/'}),
     (r'^mednet/messaging/$', 'mednet.messaging.views.index'),
@@ -51,6 +53,7 @@ urlpatterns = patterns('',
     (r'^mednet/admin/', include(admin.site.urls)),
     (r'^mednet/databrowse/(.*)', databrowse.site.root),
     (r'^mednet/messaging/next_message/([a-z]+)', 'mednet.messaging.views.next_message'),
+    (r'^mednet/sahana/add_status/', 'mednet.sahana.views.hospital_status_form'),
     (r'^mednet/sahana/add_hbc/', 'mednet.sahana.views.bed_capacity_report'),
     (r'^mednet/sahana/add_request/', 'mednet.sahana.views.hospital_request_form'),
     (r'^mednet/sahana/add_contact/', 'mednet.sahana.views.hospital_contact_form'),

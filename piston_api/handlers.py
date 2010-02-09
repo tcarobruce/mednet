@@ -1,10 +1,106 @@
+import sys
 from piston.handler import BaseHandler, AnonymousBaseHandler
 from piston.emitters import Emitter, JSONEmitter
 from piston_api.emitters import GeoJSONEmitter
 from mednet.sahana.models import *
+from mednet.messaging.models import *
+from piston.utils import rc
+from datetime import *
+import hashlib, random
+import urllib
 
 JSONEmitter.unregister('json')
 Emitter.register('json', GeoJSONEmitter, 'application/javascript; charset=utf-8')
+
+outgoing_fields = ('date_queued', 'receipt', 'date_sent', 'message', 'recipient', 'guid')
+
+#Incoming SMS
+class AnonymousIncomingSmsHandler(BaseHandler):
+	allowed_methods=('GET','POST',)
+	model = IncomingSmsMessage
+
+	def read(self, request, message_id=None):
+		if(message_id):
+			return IncomingSmsMessage.objects.get(guid=message_id)
+		else:
+			return IncomingSmsMessage.objects.all()
+
+	def create(self, request):
+		if not self.has_model():
+			return rc.NOT_IMPLEMENTED
+		
+		attrs = self.flatten_dict(request.POST)
+		print attrs
+		if attrs.has_key('data'):
+			ext_posted_data = simplejson.loads(request.POST.get('data'))
+			attrs = self.flatten_dict(ext_posted_data)
+		try:
+			inst = self.model.objects.get(**attrs)
+			return rc.DUPLICATE_ENTRY
+		except self.model.DoesNotExist:
+			try:
+				attrs['message'] = urllib.unquote(attrs['message']).decode('utf8')
+			except:
+				attrs['message'] = urllib.unquote(attrs['message'])
+			inst = self.model(**attrs)
+			inst.receipt = hashlib.sha1(str(random.random())).hexdigest()
+			inst.status_changed_date = datetime.now()
+			inst.status = 'NW'
+			inst.save()
+			return inst
+		except self.model.MultipleObjectsReturned:
+			return rc.DUPLICATE_ENTRY
+
+class IncomingSmsHandler(BaseHandler):
+	allow_methods = ('GET',)
+	model = IncomingSmsMessage
+	anonymous = AnonymousIncomingSmsHandler
+
+#Outgoing SMS
+class AnonymousOutgoingSmsHandler(BaseHandler):
+	allowed_methods = ('GET','PUT')
+	model = OutgoingSmsMessage
+	fields = outgoing_fields
+
+	def read(self, request, message_date=None):
+		if(message_date):
+			try:	
+				objects = OutgoingSmsMessage.objects.filter(receipt=None)
+				print objects
+				return objects
+			except:
+				rc.BAD_REQUEST
+		else:
+			return OutgoingSmsMessage.objects.all()
+	
+	def update(self, request, *args, **kwargs):		
+		attrs = self.flatten_dict(request.POST)
+		print attrs
+		try:
+			guid=attrs['guid']
+			instance = OutgoingSmsMessage.objects.get(guid=guid)
+			print instance
+		except self.model.DoesNotExist:
+			print "model.DoesNotExist"
+			return rc.NOT_FOUND
+		except self.model.MultipleObjectsReturned:
+			print "bad request1"
+			return rc.BAD_REQUEST
+		except:
+			print "bad request2"
+			print sys.exc_info()
+			return rc.BAD_REQUEST
+		attrs = self.flatten_dict(request.data)
+		for k,v in attrs.iteritems():
+			setattr(instance, k, v)
+		instance.save()
+		return instance
+
+class OutgoingSmsHandler(BaseHandler):
+	allow_methods = ('GET',)
+	model = OutgoingSmsMessage
+	fields = outgoing_fields
+	anonymous = AnonymousOutgoingSmsHandler
 
 #Hospitals
 class AnonymousHospitalHandler(BaseHandler):

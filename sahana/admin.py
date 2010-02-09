@@ -38,6 +38,9 @@ class HmsRequestMedicalSupplyAdmin(admin.OSMGeoAdmin):
     list_display = ('pk', 'supply', 'unit', 'quanity', 'supply_id')
     search_fields = ('supply', 'supply_id')
 
+class HmsStatusAdmin(admin.OSMGeoAdmin):
+    list_display = ('pk', 'hospital', 'status_date')
+
 admin.site.register(PrPerson)
 admin.site.register(OrOrganisation)
 admin.site.register(HmsHospital, HmsHospitalAdmin)
@@ -48,6 +51,7 @@ admin.site.register(HmsImage, HmsImageAdmin)
 admin.site.register(HmsResource, HmsResourceAdmin)
 admin.site.register(HmsService, HmsServiceAdmin)
 admin.site.register(HmsRequest, HmsRequestAdmin)
+admin.site.register(HmsStatus, HmsStatusAdmin)
 admin.site.register(HmsRequestMedicalSupply, HmsRequestMedicalSupplyAdmin)
 admin.site.register(OrOffice)
 admin.site.register(OrActivity)

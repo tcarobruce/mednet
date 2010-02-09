@@ -15,6 +15,10 @@
 <input id='msg_id' type='hidden' name='msg_id' value='{{ next_mail_message.pk }}'>
 <button type='submit' value='Complete' class='complete'>Complete</button>
 <button type='submit' value='Ignore' class='ignore'>Ignore</button>
+<button type='submit' value='Custom Message' class='custom'>Custom Message</button>
+<div id='custom_message_area'>
+<textarea name='custom_message' id='custom_message' class='custom_message'></textarea>
+</div>
 </form>
 <h2>Select the Hospital That this message is for</h2>
 <form id='messageform'>
