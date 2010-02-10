@@ -2,14 +2,14 @@
 
 from django.shortcuts import render_to_response
 from mednet.ushahidi.models import Location, Incident, Category
-from mednet.messaging.models import MailMessage, SmsMessage, VoiceMessage
+from mednet.messaging.models import MailMessage, IncomingSmsMessage, VoiceMessage
 #from django.contrib.gis.shortcuts import render_to_kml
 from django.core import serializers 
 from django.http import HttpResponse
 from django.views.decorators.cache import cache_page
 
 def sms_json(request):
-    sms = SmsMessage.objects.all()
+    sms = IncomingSmsMessage.objects.all()
     return render_to_response("sms.json", {'sms' : sms }, mimetype='application/json')
 
 def voice_json(request):

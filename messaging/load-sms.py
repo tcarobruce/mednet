@@ -20,7 +20,7 @@ for i in range(1,length):
 	guid = d.entries[i].guid
 
 	try:
-                existing_sms = SmsMessage.objects.get(guid=guid)
+                existing_sms = IncomingSmsMessage.objects.get(guid=guid)
         except:
 		print d.entries[i]
 		sender = d.entries[i].author.replace('sms://', '')
@@ -28,10 +28,10 @@ for i in range(1,length):
 		date_sent = rfc822.parsedate(d.entries[i].updated)
 		date_sent = strftime("%Y-%m-%d %H:%M:%S", date_sent)
 	
-		sms = SmsMessage()
+		sms = IncomingSmsMessage()
 		sms.sender = sender
 		sms.message = message
-		sms.guid = guid
+		sms.guid = guid.replace('http://eis.instedd.org:3000/', '')
 		sms.date_sent = date_sent
 		sms.status = 'NW'
 		sms.status_changed_date = date_sent

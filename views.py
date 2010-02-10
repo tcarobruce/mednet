@@ -36,3 +36,6 @@ def hospital(request, hospital_id):
 
 def about(request):
     return render_to_response('about.html', {}, context_instance=RequestContext(request))
+
+def gradient(request):
+    return render_to_response('test_gradient.html', {}, context_instance=RequestContext(request))

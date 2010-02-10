@@ -41,3 +41,7 @@ class MedicalSupplyForm(ModelForm):
         model = HmsRequestMedicalSupply
     exclude = ('created_on', 'created_by', 'modified_by', 'modified_on', 'uuid', 'deleted',)
 
+class HospitalStatusForm(ModelForm):
+    class Meta:
+        model = HmsStatus
+	exclude = ('created_on', 'created_by', 'modified_by', 'modified_on', 'uuid', 'deleted', 'hospital')

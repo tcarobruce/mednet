@@ -4,9 +4,11 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template import RequestContext
+from django.contrib.auth.decorators import login_required
 from sahana.forms import * 
 from sahana.models import *
 
+@login_required
 def bed_capacity_report(request):
 	try:
 		hospital_id = request.GET['hospital_id']
@@ -27,6 +29,7 @@ def bed_capacity_report(request):
 
 	return render_to_response('sahana/hbc.html', {'hospital_id': hospital_id, 'form': form, 'request': request}, context_instance=RequestContext(request))
 
+@login_required
 def hospital_request_form(request):
 	try:
 		hospital_id = request.GET['hospital_id']
@@ -47,6 +50,7 @@ def hospital_request_form(request):
 
 	return render_to_response('sahana/hospital_request.html', {'hospital_id': hospital_id, 'form': form, 'request': request}, context_instance=RequestContext(request))
 
+@login_required
 def hospital_contact_form(request):
 	try:
 		hospital_id = request.GET['hospital_id']
@@ -67,6 +71,7 @@ def hospital_contact_form(request):
 
 	return render_to_response('sahana/hospital_contact.html', {'hospital_id': hospital_id, 'form': form, 'request': request}, context_instance=RequestContext(request))
 
+@login_required
 def hospital_resources_form(request):
 	try:
 		hospital_id = request.GET['hospital_id']
@@ -87,6 +92,7 @@ def hospital_resources_form(request):
 
 	return render_to_response('sahana/hospital_resources.html', {'hospital_id': hospital_id, 'form': form, 'request': request}, context_instance=RequestContext(request))
 
+@login_required
 def hospital_services_form(request):
 	try:
 		if(request.POST):
@@ -115,6 +121,7 @@ def hospital_services_form(request):
 
 	return render_to_response('sahana/hospital_services.html', {'hospital_id': hospital_id, 'form': form, 'request': request}, context_instance=RequestContext(request))
 
+@login_required
 def hospital_activities_form(request):
 	try:
 		hospital_id = request.GET['hospital_id']
@@ -135,6 +142,29 @@ def hospital_activities_form(request):
 
 	return render_to_response('sahana/hospital_activities.html', {'hospital_id': hospital_id, 'form': form, 'request': request}, context_instance=RequestContext(request))
 
+@login_required
+def hospital_status_form(request):
+	try:
+		hospital_id = request.GET['hospital_id']
+	except:
+		hospital_id = None
+	print hospital_id
+	status = HmsStatus()
+	if request.POST:
+		form = HospitalStatusForm(data=request.POST, instance=status)
+		if form.is_valid():
+			form.save()
+			status.hospital = HmsHospital.objects.get(pk=request.POST['hospital'])
+			status.save()
+			return HttpResponse('ok')
+		else:
+			return HttpResponse('errors')
+	else:
+		form = HospitalStatusForm(instance=status)
+
+	return render_to_response('sahana/hospital_status.html', {'hospital_id': hospital_id, 'form': form, 'request': request}, context_instance=RequestContext(request))
+
+@login_required
 def person_form(request):
 	person =  PrPerson()
 	if request.POST:
